@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Booking{% endblock %}
+
+{% block content %}
+<h2>Edit Booking</h2>
+<form method="POST">
+    <label>Event Type:</label>
+    <input type="text" name="event_type" value="{{ booking.event_type }}" required>
+
+    <label>Event Date:</label>
+    <input type="date" name="event_date" value="{{ booking.event_date.strftime('%Y-%m-%d') }}" required>
+
+    <label>Package:</label>
+    <input type="text" name="package" value="{{ booking.package }}" required>
+
+    <label>Quote Amount:</label>
+    <input type="number" name="quote_amount" value="{{ booking.quote_amount }}" required>
+
+    <button type="submit">Update Booking</button>
+</form>
+{% endblock %}

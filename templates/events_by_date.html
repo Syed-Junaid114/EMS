@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Events by Date{% endblock %}
+
+{% block content %}
+<h1>Select a Date</h1>
+<form method="POST">
+  <input type="date" name="event_date" required>
+  <button type="submit">Check Events</button>
+</form>
+
+{% if selected_date %}
+  <h2>Events on {{ selected_date }}</h2>
+  {% if events %}
+    <table>
+      <tr>
+        <th>Event ID</th>
+        <th>Event Type</th>
+        <th>User</th>
+        <th>Status</th>
+      </tr>
+      {% for event in events %}
+        <tr>
+          <td>{{ event.id }}</td>
+          <td>{{ event.event_type }}</td>
+          <td>{{ event.client.name }}</td>
+          <td>{{ event.status }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No events scheduled on this date.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
