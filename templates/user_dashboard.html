@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f0f0f0;
+        }
+
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <h2>Your Upcoming Bookings</h2>
+
+    {% if bookings %}
+    <table>
+        <tr>
+            <th>Booking Date</th>
+            <th>Event Type</th>
+            <th>Amount</th>
+            <th>Payment Status</th>
+            <th>Action</th>
+        </tr>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.event_date }}</td>
+            <td>{{ booking.event_type }}</td>
+            <td >₹{{ booking.amount }}</td>
+            <td>{{ booking.payment_status }}</td>
+            <td>
+                {% if booking.payment_status != 'Yes' %}
+                    <a href="{{ url_for('payment', booking_id=booking.id) }}" class="btn">Pay Now</a>
+                {% else %}
+                    <span class="btn btn-disabled">Paid</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No upcoming bookings.</p>
+    {% endif %}
+</div>
+</body>
+</html>

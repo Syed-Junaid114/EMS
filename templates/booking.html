@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Event</title>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f9fc;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+  }
+
+  form {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 400px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+    font-weight: 600;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f9f9f9;
+  }
+
+  input[readonly] {
+    background-color: #eee;
+    cursor: not-allowed;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  input[type="submit"] {
+    width: 100%;
+    background-color: #5c67f2;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #4a54e1;
+  }
+</style>
+  <script>
+    function updateQuote() {
+      const plan = document.getElementById("package").value;
+      const amountInput = document.getElementById("quote_amount");
+      const amounts = {
+        "Basic": 49999,
+        "Prime": 79999,
+        "Luxury": 149999
+      };
+      amountInput.value = amounts[plan];
+    }
+
+    function handlePaymentOption() {
+      const payNow = document.getElementById("pay_now").checked;
+      const form = document.getElementById("bookingForm");
+
+      if (payNow) {
+        // Redirect to payment after submitting form
+        form.action = "/booking?pay=now";
+      } else {
+        // Regular form submission
+        form.action = "/booking";
+      }
+    }
+  </script>
+</head>
+<body>
+  <form method="POST" id="bookingForm" onsubmit="handlePaymentOption()">
+   <center> BOOK EVENT</center>
+    <label for="event_type">Event Type:</label><br>
+    <select name="event_type" required>
+      <option value="Wedding">Wedding</option>
+      <option value="Corporate">Corporate</option>
+      <option value="Birthday">Birthday</option>
+      <option value="Conference">Conference</option>
+      <option value="Concert">Concert</option>
+      <option value="Seminar">Seminar</option>
+      <option value="Casual Gathering">Casual Gathering</option>
+      <option value="Meetup">Meetup</option>
+      <option value="Launch Event">Launch Event</option>
+      <option value="Others">Others</option>
+    </select><br><br>
+
+    <label for="event_date">Event Date:</label><br>
+    <input type="date" name="event_date" min="{{ min_date }}" required>
+
+
+
+    <label for="package">Package:</label><br>
+    <select name="package" id="package" onchange="updateQuote()" required>
+      <option value="Basic">Basic</option>
+      <option value="Prime">Prime</option>
+      <option value="Luxury">Luxury</option>
+    </select><br><br>
+
+    <label for="quote_amount">Quote Amount:</label><br>
+    <input type="number" id="quote_amount" name="quote_amount" readonly required><br><br>
+
+    <label>Make Payment Now?</label><br>
+    <input type="radio" id="pay_now" name="payment_option" value="now" required> Yes<br>
+    <input type="radio" name="payment_option" value="later"> No<br><br>
+
+    <input type="submit" value="Submit Booking">
+  </form>
+
+  <script>
+    // Initialize quote on page load
+    updateQuote();
+  </script>
+</body>
+</html>

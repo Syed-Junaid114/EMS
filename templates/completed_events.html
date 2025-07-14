@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Completed Events{% endblock %}
+
+{% block content %}
+<h1>Completed Events</h1>
+
+{% if events %}
+<table>
+    <tr>
+        <th>Event ID</th>
+        <th>Event Type</th>
+        <th>Client</th>
+        <th>Event Date</th>
+        <th>Amount</th>
+    </tr>
+    {% for event in events %}
+    <tr>
+        <td>{{ event.id }}</td>
+        <td>{{ event.event_type }}</td>
+        <td>{{ event.client.name }}</td>
+        <td>{{ event.event_date.strftime('%Y-%m-%d') }}</td>
+        <td>${{ "%.2f"|format(event.quote_amount) }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="4" style="text-align: right;"><strong>Total Revenue:</strong></td>
+        <td><strong>${{ "%.2f"|format(total_revenue) }}</strong></td>
+    </tr>
+</table>
+{% else %}
+<p>No completed events found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,224 @@
+y<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Payment Gateway</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 25px 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2, p {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+      gap: 20px;
+    }
+    .payment-box {
+      display: none;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: green;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: darkgreen;
+    }
+    .visible {
+      display: block !important;
+    }
+    .spinner {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .spinner div {
+      width: 40px;
+      height: 40px;
+      border: 5px solid #ccc;
+      border-top: 5px solid green;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>🔐 Secure Payment Gateway</h2>
+  <p>Amount Payable: <strong>₹{{ amount }}</strong></p>
+
+  <form id="paymentForm" method="POST" onsubmit="return validateAndSubmit();">
+    <div class="form-group">
+      <label>Select Payment Method:</label>
+      <ul>
+        <li><input type="radio" name="method" value="upi" checked> UPI</li>
+        <li><input type="radio" name="method" value="card"> Card</li>
+        <li><input type="radio" name="method" value="netbanking"> Net Banking</li>
+      </ul>
+    </div>
+
+    <div id="upi" class="payment-box visible">
+      <div class="form-group">
+        <label>UPI ID:</label>
+        <input type="text" id="upi_id" name="upi_id" placeholder="example@bank">
+        <div id="upi_error" class="error"></div>
+      </div>
+    </div>
+
+    <div id="card" class="payment-box">
+      <div class="form-group">
+        <label>Card Number:</label>
+        <input type="text" id="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
+        <div id="card_error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label>Cardholder Name:</label>
+        <input type="text" id="card_name" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label>Expiry Date:</label>
+        <input type="month" id="expiry">
+        <div id="expiry_error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label>CVV:</label>
+        <input type="password" id="cvv" maxlength="3">
+        <div id="cvv_error" class="error"></div>
+      </div>
+    </div>
+
+    <div id="netbanking" class="payment-box">
+      <div class="form-group">
+        <label>Select Bank:</label>
+        <select>
+          <option>SBI</option>
+          <option>HDFC</option>
+          <option>ICICI</option>
+          <option>Axis</option>
+          <option>PNB</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn">Pay ₹{{ amount }}</button>
+  </form>
+
+  <div class="spinner" id="spinner">
+    <p>Processing your payment...</p>
+    <div></div>
+  </div>
+</div>
+
+<script>
+  const methodRadios = document.querySelectorAll('input[name="method"]');
+  const sections = {
+    upi: document.getElementById('upi'),
+    card: document.getElementById('card'),
+    netbanking: document.getElementById('netbanking')
+  };
+
+  methodRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      for (let key in sections) {
+        sections[key].classList.remove('visible');
+      }
+      sections[radio.value].classList.add('visible');
+    });
+  });
+
+  function validateAndSubmit() {
+    const method = document.querySelector('input[name="method"]:checked').value;
+
+    // Reset errors
+    document.getElementById('upi_error').innerText = '';
+    document.getElementById('card_error').innerText = '';
+    document.getElementById('cvv_error').innerText = '';
+    document.getElementById('expiry_error').innerText = '';
+
+    if (method === 'upi') {
+      const upi = document.getElementById('upi_id').value.trim();
+      const upiRegex = /^[\w.-]+@[\w.-]+$/;
+      if (!upiRegex.test(upi)) {
+        document.getElementById('upi_error').innerText = 'Invalid UPI ID format';
+        return false;
+      }
+    }
+
+    if (method === 'card') {
+      const card = document.getElementById('card_number').value.replace(/\s+/g, '');
+      const cvv = document.getElementById('cvv').value.trim();
+      const expiry = document.getElementById('expiry').value;
+
+      if (!/^\d{16}$/.test(card)) {
+        document.getElementById('card_error').innerText = 'Card number must be 16 digits';
+        return false;
+      }
+
+      if (!/^\d{3}$/.test(cvv)) {
+        document.getElementById('cvv_error').innerText = 'CVV must be 3 digits';
+        return false;
+      }
+
+      if (!expiry) {
+        document.getElementById('expiry_error').innerText = 'Expiry date is required';
+        return false;
+      }
+    }
+
+    // Hide form and show spinner
+    document.getElementById("paymentForm").style.display = "none";
+    document.getElementById("spinner").style.display = "block";
+
+    // Simulate payment delay, then submit
+    setTimeout(() => {
+      document.getElementById("paymentForm").submit();
+    }, 2500); // 2.5 seconds fake processing
+
+    return false; // Prevent immediate submit
+  }
+</script>
+</body>
+</html>

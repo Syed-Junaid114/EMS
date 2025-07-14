@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Receipt</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      padding: 40px;
+    }
+
+    .receipt {
+      background: white;
+      max-width: 650px;
+      margin: auto;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .company-header {
+      text-align: center;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .company-header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #333;
+    }
+
+    .receipt h2 {
+      text-align: center;
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+
+    .receipt-info {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .receipt-info label {
+      font-weight: bold;
+      display: inline-block;
+      width: 180px;
+    }
+
+    .section-title {
+      margin-top: 25px;
+      font-size: 18px;
+      color: #555;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .footer a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .footer a:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+    <div class="company-header">
+      <h1>Evento</h1>
+    </div>
+
+    <h2>✅ Payment Successful</h2>
+
+    <div class="receipt-info">
+      <p><label>Name:</label> {{ user_name }}</p>
+      <p><label>Transaction ID:</label> {{ details.transaction_id }}</p>
+      <p><label>Amount Paid:</label> ₹{{ details.amount }}</p>
+      <p><label>Payment Method:</label> {{ details.payment_method|capitalize }}</p>
+      <p><label>Payment Time:</label> {{ details.timestamp }}</p>
+
+      <div class="section-title">Event Booking Details</div>
+      <p><label>Event Type:</label> {{ details.event_type }}</p>
+      <p><label>Event Date:</label> {{ details.event_date }}</p>
+      <p><label>Package:</label> {{ details.package }}</p>
+      <p><label>Quoted Amount:</label> ₹{{ details.quote_amount }}</p>
+    </div>
+
+    <div class="footer">
+      <a href="{{ url_for('user_dashboard') }}">Go to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+  <h2>Search Results for "{{ query }}"</h2>
+
+  {% if results %}
+    <ul>
+      {% for result in results %}
+        <li>{{ result.client.name }} - {{ result.event_type }} on {{ result.event_date.strftime('%d %b %Y') }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No results found.</p>
+  {% endif %}
+{% endblock %}
